@@ -42,7 +42,7 @@ class MentorController extends Controller
             "name" => "required|string",
             "profile" => "required|url",
             "profession" => "required|string",
-            "email" => "required|email"
+            "email" => "required|email|unique:mentors,email"
         ];
 
         $data = $request->all();
