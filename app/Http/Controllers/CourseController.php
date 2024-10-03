@@ -9,6 +9,36 @@ use Illuminate\Support\Facades\Validator;
 
 class CourseController extends Controller
 {
+    public function index(Request $request)
+    {
+        $courses = Course::query();
+
+        $q = $request->query('q');
+        $status = $request->query('status');
+
+        $courses->when($q, function($query) use ($q) {
+            return $query->whereRaw("name LIKE '%".strtolower($q)."%'");
+        });
+
+        $courses->when($status, function($query) use ($status) {
+            return $query->where("status", "=", $status);
+        });
+
+        $result = $courses->paginate(2);
+
+        if($result->isEmpty()) {
+            return response()->json([
+                "status" => "error",
+                "message" => "data not found"
+            ]);
+        }
+
+        return response()->json([
+            "status" => "success",
+            "data" => $result
+        ]);
+    }
+
     public function store(Request $request)
     {
         $rules = [
