@@ -9,6 +9,29 @@ use Illuminate\Support\Facades\Validator;
 
 class ChapterController extends Controller
 {
+    public function index(Request $request)
+    {
+        $chapters = Chapter::query();
+        $courseId = $request->query();
+
+        $chapters->when($courseId, function($query) use ($courseId){
+            return $query->where("course_id", "=", $courseId);
+        });
+
+        $result = $chapters->get();
+        if($result->isEmpty()) {
+            return response()->json([
+                "status" => "error",
+                "message" => "data not found"
+            ], 404);
+        }
+
+        return response()->json([
+            "status" => "success",
+            "data" => $result
+        ]);
+    }
+
     public function store(Request $request)
     {
         $rules = [
