@@ -9,6 +9,15 @@ use Illuminate\Support\Facades\Validator;
 
 class LessonController extends Controller
 {
+    public function index()
+    {
+        $lesson = Lesson::all();
+        return response()->json([
+            "status" => "success",
+            "data" => $lesson
+        ]);
+    }
+
     public function store(Request $request)
     {
         $rules = [
