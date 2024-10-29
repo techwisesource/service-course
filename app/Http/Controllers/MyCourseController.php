@@ -10,13 +10,29 @@ use Illuminate\Support\Facades\Validator;
 class MyCourseController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $mycourse = MyCourse::all();
+        $myCourses = MyCourse::query();
+
+        $userId = $request->query("user_id");
+
+        /**
+         * condition for debug user_id
+         */
+        // if(!$userId) {
+        //     return response()->json([
+        //         "status" => "error",
+        //         "message" => "User ID is required"
+        //     ], 400);
+        // }
+
+        $myCourses->when($userId, function($query) use ($userId) {
+            return $query->where("user_id", "=", $userId);
+        });
 
         return response()->json([
-            "status" => "sucess",
-            "data" => $mycourse
+            "status" => "success",
+            "data" => $myCourses->get()
         ]);
     }
 
