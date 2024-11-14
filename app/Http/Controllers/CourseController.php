@@ -148,11 +148,13 @@ class CourseController extends Controller
         }
 
         $course = Course::find($id);
+        // echo"<pre>".print_r($id)."</pre>";
+
         if(!$course) {
             return response()->json([
                 "status" => "error",
                 "message" => "course not found"
-            ]);
+            ], 404);
         }
 
         $mentorId = $request->input("mentor_id");
