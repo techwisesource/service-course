@@ -12,7 +12,7 @@ class MyCourseController extends Controller
 
     public function index(Request $request)
     {
-        $myCourses = MyCourse::query();
+        $myCourses = MyCourse::query()->with("course");
 
         $userId = $request->query("user_id");
 
@@ -86,6 +86,17 @@ class MyCourseController extends Controller
 
         // Jika validasi berhasil, lanjutkan proses penyimpanan
         $myCourse = MyCourse::create($data);
+        return response()->json([
+            "status" => "success",
+            "data" => $myCourse
+        ]);
+    }
+
+    public function createPremiumAccess(Request $request)
+    {
+        $data = $request->all();
+        $myCourse = MyCourse::create($data);
+
         return response()->json([
             "status" => "success",
             "data" => $myCourse
